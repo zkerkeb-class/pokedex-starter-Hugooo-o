@@ -1,10 +1,10 @@
 import { useState,useEffect } from "react"
 import "./Card.css"
 
-const PokemonCard = ({name, types, image, attack, defense, hp}) => {
+const PokemonCard = ({name, types = [], image, attack, defense, hp}) => {
     const [currentHP, setCurrentHP] = useState(hp)
-
-    useEffect(() => {
+    console.log("types = ", {types})
+    /*useEffect(() => {
         alert("le combat commence")
     
     }, [])
@@ -14,7 +14,7 @@ const PokemonCard = ({name, types, image, attack, defense, hp}) => {
         if (currentHP <= 0) {
            alert("bulbizarre est mort")
         }
-    }, [currentHP])
+    }, [currentHP])*/
 
     const handleAttack = () => {
         console.log("bulbizarre ce mange une patate")
@@ -25,9 +25,9 @@ const PokemonCard = ({name, types, image, attack, defense, hp}) => {
         <div>
             <h1>{name}</h1>
             <img src={image} alt={name} />
-            {types.map((type) => {
+            {Array.isArray(types) && types.map((type) => {
                 return (
-                    <p key={type}>{type}</p>
+                    <p key={type}> {type} </p>
                 )
             })}
             <p>Attack: {attack}</p>

@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import pokemons from './assets/pokemons'
-import PokemonCard from './components/pokemonCard/Card'
+//import PokemonList from './components/PokemonList/PokemonList'
+//import PokemonCard from './components/pokemonCard/Card'
 import './App.css'
+import PokemonNavigator from './components/pokemonNavigator/PokemonNavigator'
+import { pokemonImages } from './assets/imageLibrary'
+import PokemonList from './components/pokemonList/pokemonList'
 
 const bulbasaur = pokemons[0]
 
@@ -12,14 +16,8 @@ function App() {
   // const nom = 'Zakaria'
   return (
     <div>
-        <PokemonCard 
-        name={bulbasaur.name.french} 
-        types={bulbasaur.type} 
-        image={bulbasaur.image}
-        attack={bulbasaur.base.Attack}
-        defense={bulbasaur.base.Defense}
-        hp={bulbasaur.base.HP}
-        />
+        
+        <PokemonList />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-//import './SearchBar.css';
+import './searchBar.css';
 
 const SearchBar = ({ onSearch }) => {
   const handleChange = (e) => {
@@ -10,7 +10,8 @@ const SearchBar = ({ onSearch }) => {
     <div className="search-bar">
       <input
         type="text"
-        placeholder="Rechercher un Pokémon..."
+        placeholder="Rechercher un Pokémon"
+        //onChange={handleChange}
         onChange={handleChange}
       />
     </div>

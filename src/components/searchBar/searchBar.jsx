@@ -10,8 +10,8 @@ const SearchBar = ({ onSearch }) => {
     <div className="search-bar">
       <input
         type="text"
-        placeholder="Rechercher un Pokémon"
-        //onChange={handleChange}
+        className="search-input"
+        placeholder="Rechercher un pokémon..."
         onChange={handleChange}
       />
     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import './typeFilter.css';
 
 const TypeFilter = ({ onTypeSelect, selectedType }) => {
   const types = [
@@ -8,17 +9,20 @@ const TypeFilter = ({ onTypeSelect, selectedType }) => {
   ];
 
   return (
-    <select 
-      value={selectedType} 
-      onChange={(e) => onTypeSelect(e.target.value)}
-    >
-      <option value="">Tous les types</option>
-      {types.map(type => (
-        <option key={type} value={type}>
-          {type}
-        </option>
-      ))}
-    </select>
+    <div className="type-filter-container">
+      <select 
+        className="type-select"
+        value={selectedType} 
+        onChange={(e) => onTypeSelect(e.target.value)}
+      >
+        <option value="">Tous les types</option>
+        {types.map(type => (
+          <option key={type} value={type}>
+            {type}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };
 

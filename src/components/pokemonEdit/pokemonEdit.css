@@ -1,0 +1,133 @@
+.pokemon-edit {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 8px solid #FFCB05;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2a75bb;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #2a75bb;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .cancel-button, .save-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancel-button {
+    background-color: #999;
+    color: white;
+  }
+  
+  .save-button {
+    background-color: #2a75bb;
+    color: white;
+  }
+  
+  .cancel-button:hover {
+    background-color: #777;
+  }
+  
+  .save-button:hover {
+    background-color: #1b5288;
+  }
+
+  .form-types {
+    margin-top: 1rem;
+  }
+  
+  .types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .type-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+  }
+  
+  .type-option input[type="checkbox"] {
+    width: auto;
+  }
+  
+  .type-option label {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  
+  .type-option input[type="checkbox"]:disabled + label {
+    color: #999;
+  }
+  
+  .save-button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .stat-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .stat-input input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #2a75bb;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .stat-input input:focus {
+    outline: none;
+    border-color: #FFCB05;
+  }
+  
+  .stat-input input::-webkit-inner-spin-button,
+  .stat-input input::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+  

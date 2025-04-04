@@ -1,0 +1,49 @@
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 12px 45px 12px 20px;
+    font-size: 16px;
+    border: 3px solid #2a75bb;
+    border-radius: 25px;
+    background-color: white;
+    transition: all 0.3s ease;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #FFCB05;
+    box-shadow: 0 4px 8px rgba(42, 117, 187, 0.2);
+  }
+  
+  .search-input::placeholder {
+    color: #999;
+    opacity: 0.8;
+  }
+  
+  /* Style pour l'icône de recherche (si vous en utilisez une) */
+  .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2a75bb;
+    pointer-events: none;
+  }
+  
+  /* Animation au hover */
+  .search-input:hover {
+    border-color: #3d8bd4;
+    transform: translateY(-1px);
+  }
+  
+  /* Style pour le conteneur lorsque l'input est focus */
+  .search-container:focus-within {
+    transform: scale(1.01);
+  }

@@ -1,6 +1,5 @@
 import {pokemonImages} from './imageLibrary';
 
-
 const pokemonsList = [{
     "id": 1,
     "name": {

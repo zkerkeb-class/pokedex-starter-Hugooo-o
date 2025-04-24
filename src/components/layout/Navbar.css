@@ -1,0 +1,150 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background-color: #2a75bb;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  will-change: transform, opacity, backdrop-filter;
+}
+
+/* Navbar visible avec effet de flou */
+.navbar-visible {
+  transform: translateY(0);
+  opacity: 1;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.12);
+  background-color: rgba(42, 117, 187, 0.92);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: none; /* Pas de transition quand elle apparaît */
+}
+
+/* Navbar cachée */
+.navbar-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  box-shadow: none;
+  pointer-events: none; /* Permet aux clics de passer à travers pendant la transition */
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.3s ease-out,
+              box-shadow 0.3s ease-in-out; /* Transition seulement quand elle disparaît */
+}
+
+/* Ajout d'un espace pour le contenu sous la navbar fixed */
+body {
+  padding-top: 70px; /* Ajusté pour avoir un léger espace entre la navbar et le contenu */
+  margin: 0;
+  background-color: #2a75bb; /* Même couleur que la navbar pour éviter l'espace blanc */
+}
+
+#root {
+  background-color: white; /* Fond blanc pour le contenu principal */
+  min-height: calc(100vh - 70px); /* Hauteur minimale pour couvrir l'écran moins la navbar */
+}
+
+.nav-brand, .nav-links {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav-link:hover:before {
+  width: 80%;
+  left: 10%;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link:active {
+  transform: translateY(0);
+}
+
+.settings-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.settings-link::before {
+  content: "⚙️";
+  margin-right: 5px;
+  font-size: 0.9rem;
+}
+
+.admin-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+  font-size: 0.9rem;
+  margin-right: 10px;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+  
+  body {
+    padding-top: 105px; /* Ajusté pour la navbar en mode mobile */
+  }
+  
+  .nav-brand, .nav-links {
+    width: 100%;
+    justify-content: center;
+    margin: 0.5rem 0;
+  }
+  
+  .nav-link {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .admin-status {
+    margin-bottom: 5px;
+    text-align: center;
+    width: 100%;
+  }
+} 

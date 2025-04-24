@@ -1,0 +1,80 @@
+/* Style pour la section image */
+.form-image {
+  margin-bottom: 2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #f8f8f8;
+}
+
+.image-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  min-height: 120px;
+  background-color: #ffffff;
+  border: 2px dashed #cccccc;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.image-preview img {
+  max-width: 120px;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.image-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.image-button {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.image-button:hover {
+  background-color: #e0e0e0;
+  border-color: #bbb;
+}
+
+.image-button.active {
+  background-color: #2a75bb;
+  color: white;
+  border-color: #2a75bb;
+}
+
+.image-upload-container {
+  flex: 1;
+  position: relative;
+}
+
+/* Style adapté au thème Pokémon */
+.form-image label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2a75bb;
+  font-weight: bold;
+}
+
+/* Animation sur hover */
+.image-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Pour garder le style cohérent avec le reste de l'application */
+.image-button {
+  font-family: inherit;
+  font-size: 0.9rem;
+}

@@ -1,16 +1,7 @@
-html, body {
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden; /* Empêche le scroll horizontal */
-  display: flex;
-  flex-direction: column;
-}
-
+/* Suppression des styles globaux qui peuvent causer des conflits */
 .pokemon-container {
-  height: 100vh;
-  width: 100vw;
+  min-height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
@@ -20,19 +11,18 @@ html, body {
   overflow-x: hidden;
 }
 
-.pokemon-list {
+.pokemon-container .pokemon-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, 350px);
   justify-content: center;
   gap: 1.5rem;
   padding: 2rem;
-  width: 100vw;
+  width: 100%;
   margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
-.filters {
+.pokemon-container .filters {
   position: sticky;
   top: 0;
   z-index: 10;
@@ -47,14 +37,14 @@ html, body {
   box-sizing: border-box;
 }
 
-.search-container {
+.pokemon-container .search-container {
   flex: 0 1 300px;
 }
 
 /* Ajustement de la taille des cartes */
-.pokemon-card {
+.pokemon-container .pokemon-card {
   width: 350px;
-  min-height: 400px; /* Ajout d'une hauteur minimale */
+  min-height: 450px; /* Ajusté pour plus d'espace pour les statistiques */
   background: white;
   border-radius: 10px;
   padding: 1rem;
@@ -70,115 +60,138 @@ html, body {
 }
 
   
-  .pokemon-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    border: 8px solid #bbb12a;
-  }
-  
-  .pokemon-card h1 {
-    color: #2a75bb;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-    text-transform: capitalize;
-  }
-  
-  .pokemon-card img {
-    width: 150px;
-    height: 150px;
-    display: block;
-    margin: 0 auto;
-    object-fit: contain;
-  }
-  
-  .pokemon-types {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .pokemon-type {
-    border-radius: 20px;
-    font-size: 0.875rem;
-    color: white;
-    text-transform: uppercase;
-    font-weight: bold;
-  }
-  
-  /* Stats du Pokémon */
-  .pokemon-stats {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-    background-color: rgba(0,0,0,0.05);
-    border-radius: 10px;
-    font-size: 0.8rem;
-    width: calc(100% - 2rem); /* Ajustement de la largeur en tenant compte des marges */
-    box-sizing: border-box;
-    align-self: center; /* Centrer la carte dans le conteneur */
-  }
-  
-  .pokemon-stat {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.25rem 0.5rem; /* Ajout d'un padding plus petit */
-    background-color: white;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    color: black;
-    font-weight: bold;
-  }
-  
+.pokemon-container .pokemon-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border: 8px solid #bbb12a;
+}
 
-  
-  /* État de chargement et erreur */
-  .loading, .error {
-    text-align: center;
-    padding: 2rem;
-    font-size: 1.2rem;
-    color: #666;
-  }
-  
-  .error {
-    color: #dc3545;
-  }
+.pokemon-container .pokemon-card h1 {
+  color: #2a75bb;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
 
-  .pokemon-type {
-    display: flex;
-    align-items: center;
-  }
-  
-  .type-icon {
-    width: 20px;
-    height: 5px;
-    object-fit: contain;
-  }
-  
-  .pokemon-types {
-    display: flex;
-    justify-content: center;
-  }
+.pokemon-container .pokemon-card img {
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
 
-  .right-controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+/* Styles des types */
+.pokemon-container .pokemon-types {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  flex-wrap: nowrap; /* S'assurer que les types restent sur une seule ligne */
+  justify-content: center;
+}
+
+.pokemon-container .pokemon-type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.pokemon-container .pokemon-type:has(img) {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.pokemon-container .pokemon-type:not(:has(img)) {
+  padding: 0.25rem 0.5rem;
+  background-color: #ffcb05;
+  color: #2a75bb;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.pokemon-container .type-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* Stats du Pokémon (copié et adapté de MyPokemons) */
+.pokemon-container .pokemon-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  background-color: #f8f8f8;
+  padding: 0.75rem;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+}
+
+.pokemon-container .pokemon-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.pokemon-container .pokemon-stat span:first-child {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.pokemon-container .pokemon-stat span:last-child {
+  font-weight: bold;
+  color: #2a75bb;
+  font-size: 1.1rem;
+}
+
+/* État de chargement et erreur */
+.pokemon-container .loading, 
+.pokemon-container .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.pokemon-container .error {
+  color: #dc3545;
+}
+
+.pokemon-container .right-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pokemon-container .create-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 25px;
+  background-color: #2a75bb;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pokemon-container .create-button:hover {
+  background-color: #FFCB05;
+  color: #2a75bb;
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pokemon-container .pokemon-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
   
-  .create-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 25px;
-    background-color: #2a75bb;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  .pokemon-container .pokemon-card {
+    width: 100%;
   }
-  
-  .create-button:hover {
-    background-color: #FFCB05;
-    color: #2a75bb;
-    transform: translateY(-1px);
-  }
+}

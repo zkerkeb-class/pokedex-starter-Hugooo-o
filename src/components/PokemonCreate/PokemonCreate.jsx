@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import pokemonService from '../services/pokemonService';
 import '../pokemonEdit/pokemonEdit.css';
+import './PokemonCreate.css';
 
 const PokemonCreate = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [pokemon, setPokemon] = useState({
     id: '',
     name: { french: '' },
@@ -15,11 +17,15 @@ const PokemonCreate = () => {
       Attack: 0,
       Defense: 0,
       'Sp. Attack': 0,
-      'Sp. Defense': 0
+      'Sp. Defense': 0,
+      Speed: 0
     }
   });
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [isValid, setIsValid] = useState(false);
+  const [customImage, setCustomImage] = useState(null);
+  const [useDefaultImage, setUseDefaultImage] = useState(true);
+  const [previewImage, setPreviewImage] = useState('');
 
   const availableTypes = [
     "Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting", "Poison", 
@@ -27,11 +33,51 @@ const PokemonCreate = () => {
     "Steel", "Fairy"
   ];
 
+  // Récupérer le dernier ID et l'incrémenter
+  useEffect(() => {
+    setIsLoading(true);
+    pokemonService.getPokemonList()
+      .then(response => {
+        if (response && response.pokemons && response.pokemons.length > 0) {
+          // Trouver l'ID maximum
+          const maxId = Math.max(...response.pokemons.map(p => parseInt(p.id) || 0));
+          setPokemon(prev => ({
+            ...prev,
+            id: maxId + 1
+          }));
+          console.log('ID calculé automatiquement:', maxId + 1);
+          
+          // Définir l'image par défaut comme preview
+          setPreviewImage(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${maxId + 1}.png`);
+        } else {
+          setPokemon(prev => ({
+            ...prev,
+            id: 1 // Si aucun pokémon n'existe, commencer à 1
+          }));
+          
+          // Définir l'image par défaut comme preview pour ID=1
+          setPreviewImage(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png`);
+        }
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error('Erreur lors du chargement des pokémons:', err);
+        setError('Erreur lors du chargement des données');
+        setIsLoading(false);
+      });
+  }, []);
+
   const handleIdChange = (e) => {
+    const newId = e.target.value;
     setPokemon(prev => ({
       ...prev,
-      id: e.target.value
+      id: newId
     }));
+    
+    // Mettre à jour l'image par défaut si l'option est activée
+    if (useDefaultImage) {
+      setPreviewImage(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${newId}.png`);
+    }
   };
 
   const handleChange = (e) => {
@@ -56,6 +102,10 @@ const PokemonCreate = () => {
     });
   };
 
+  useEffect(() => {
+    setIsValid(pokemon.id && pokemon.name.french && selectedTypes.length >= 1 && selectedTypes.length <= 2);
+  }, [pokemon.id, pokemon.name.french, selectedTypes]);
+
   const handleStatsChange = (e) => {
     const { name, value } = e.target;
     const numberValue = parseInt(value);
@@ -70,6 +120,26 @@ const PokemonCreate = () => {
     }
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Convertir l'image en base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCustomImage(reader.result);
+        setPreviewImage(reader.result);
+        setUseDefaultImage(false);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUseDefaultImage = () => {
+    setUseDefaultImage(true);
+    setCustomImage(null);
+    setPreviewImage(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -80,7 +150,7 @@ const PokemonCreate = () => {
     }
   
     try {
-      // Structure correcte du nouveau pokémon
+      // Structure correcte du nouveau pokémon selon le modèle MongoDB
       const newPokemon = {
         id: parseInt(pokemon.id),
         name: {
@@ -88,25 +158,34 @@ const PokemonCreate = () => {
           english: pokemon.name.french // Par défaut même valeur
         },
         type: selectedTypes,
+        // Utiliser l'image personnalisée si elle existe, sinon l'image par défaut
+        image: useDefaultImage 
+          ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`
+          : customImage,
         base: {
           HP: parseInt(pokemon.base.HP),
           Attack: parseInt(pokemon.base.Attack),
           Defense: parseInt(pokemon.base.Defense),
-          'Sp. Attack': parseInt(pokemon.base['Sp. Attack']),
-          'Sp. Defense': parseInt(pokemon.base['Sp. Defense'])
+          // Ces noms doivent correspondre au modèle MongoDB
+          SpecialAttack: parseInt(pokemon.base['Sp. Attack']),
+          SpecialDefense: parseInt(pokemon.base['Sp. Defense']),
+          Speed: parseInt(pokemon.base.Speed || 0)
         }
       };
       
       console.log('Données envoyées:', newPokemon); // Pour déboguer
       const response = await pokemonService.PostNewPokemon(newPokemon);
       console.log('Réponse:', response); // Pour déboguer
-      navigate('/');
+      
+      // Forcer un rafraîchissement de la page
+      window.location.href = '/';
     } catch (err) {
       console.error('Erreur détaillée:', err);
       setError('Erreur lors de la création du pokémon');
     }
   };
 
+  if (isLoading) return <div>Chargement...</div>;
   if (error) return <div>{error}</div>;
 
   return (
@@ -123,7 +202,9 @@ const PokemonCreate = () => {
               onChange={handleIdChange}
               min="1"
               required
+              readOnly // Rendre le champ en lecture seule
             />
+            <small>ID généré automatiquement</small>
           </div>
           <div className="form-name">
             <label>Nom (Français)</label>
@@ -135,6 +216,35 @@ const PokemonCreate = () => {
               required
             />
           </div>
+          
+          <div className="form-image">
+            <label>Image du Pokémon</label>
+            <div className="image-preview">
+              {previewImage && <img src={previewImage} alt="Aperçu du Pokémon" />}
+            </div>
+            <div className="image-buttons">
+              <button 
+                type="button" 
+                className={`image-button ${useDefaultImage ? 'active' : ''}`} 
+                onClick={handleUseDefaultImage}
+              >
+                Utiliser l'image par défaut
+              </button>
+              <div className="image-upload-container">
+                <label htmlFor="image-upload" className={`image-button ${!useDefaultImage ? 'active' : ''}`}>
+                  Télécharger une image
+                </label>
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  style={{ display: 'none' }}
+                />
+              </div>
+            </div>
+          </div>
+          
           <div className="form-types">
             <label>Types (sélectionnez 1 ou 2 types)</label>
             <div className="types-grid">
@@ -215,6 +325,18 @@ const PokemonCreate = () => {
                   max="255"
                 />
               </div>
+              <div className="stat-input">
+                <label htmlFor="Speed">Vitesse</label>
+                <input
+                  type="number"
+                  id="Speed"
+                  name="Speed"
+                  value={pokemon.base.Speed || 0}
+                  onChange={handleStatsChange}
+                  min="0"
+                  max="255"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -223,7 +345,7 @@ const PokemonCreate = () => {
           <button type="button" onClick={() => navigate('/')} className="cancel-button">
             Annuler
           </button>
-          <button type="submit" className="save-button">
+          <button type="submit" className="save-button" disabled={!isValid}>
             Créer
           </button>
         </div>

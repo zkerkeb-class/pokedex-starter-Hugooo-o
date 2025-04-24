@@ -6,6 +6,7 @@ import './pokemonList.css';
 import { imageType } from '../../assets/imageType';
 import { useNavigate } from 'react-router';
 import pokemonService from '../services/pokemonService';
+import authService from '../services/authService';
 
 const PokemonList = () => {
   const navigate = useNavigate();
@@ -15,25 +16,66 @@ const PokemonList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [availableTypes, setAvailableTypes] = useState([]);
-
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    // Vérification du statut d'administrateur
+    const checkAdmin = async () => {
+      try {
+        if (authService.isAuthenticated()) {
+          const adminStatus = await authService.checkAdminStatus();
+          console.log("PokemonList - Statut admin (serveur):", adminStatus.isAdmin);
+          setIsAdmin(adminStatus.isAdmin === true);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la vérification du statut admin:", error);
+        setIsAdmin(false);
+      }
+    };
+    
+    checkAdmin();
+    
+    // Chargement de TOUS les pokémons du Pokédex
     setIsLoading(true);
     pokemonService.getPokemonList()
-      .then(data => {
-        console.log('Received data:', data);
-        console.log('Received data:',typeof  data);
-          setPokemons(data.pokemons);
-          setIsLoading(false);
-     
+      .then(response => {
+        console.log('Response from API:', response);
+        // Vérification simple de l'existence des données
+        if (response && response.pokemons) {
+          // S'assurer de trier par ID
+          const sortedPokemons = response.pokemons.sort((a, b) => a.id - b.id);
+          setPokemons(sortedPokemons);
           
+          // Extraction et dédoublonnage des types pour le filtre
+          const types = [...new Set(sortedPokemons.flatMap(pokemon => pokemon.type))];
+          setAvailableTypes(types);
+          
+          console.log(`Nombre total de Pokémons chargés: ${sortedPokemons.length}`);
+        } else {
+          setError('Erreur lors du chargement des pokémons');
+        }
+        setIsLoading(false);
       })
       .catch(err => {
-        console.error('Error:', err);
+        console.error('Error fetching pokemons:', err);
         setError('Erreur lors du chargement des pokémons');
         setIsLoading(false);
       });
   }, []);
+  
+  // Ajout d'un effet pour écouter les changements de statut admin
+  useEffect(() => {
+    const handleAdminStatusChange = (newStatus) => {
+      console.log("PokemonList - Événement de changement de statut admin reçu:", newStatus);
+      setIsAdmin(newStatus);
+    };
+    
+    const unsubscribe = authService.subscribeToAdminChanges(handleAdminStatusChange);
+    return () => unsubscribe();
+  }, []);
+  
+  // Plus bas dans le code, avant le return
+  console.log('Current pokemons state:', pokemons);
 
   // Modifier la fonction filter pour utiliser 'pokemons' au lieu de 'pokemonArray'
   const filteredPokemons = pokemons?.filter(pokemon => {
@@ -50,17 +92,6 @@ const PokemonList = () => {
   const handleTypeSelect = (type) => {
     setSelectedType(type);
   };
-
-  /*const handlePokemonClick = (pokemonId) => {
-    pokemonService.getOnePokemon(pokemonId)
-      .then(data => {
-        navigate(`/pokemon/${pokemonId}`);
-      })
-      .catch(err => {
-        console.error('Error fetching pokemon:', err);
-        setError('Erreur lors du chargement du pokémon');
-      });
-  };*/
 
   const handlePokemonClick = (pokemonId) => {
     navigate(`/pokemon/${pokemonId}`);
@@ -81,9 +112,11 @@ const PokemonList = () => {
             onTypeSelect={handleTypeSelect} 
             selectedType={selectedType}
           />
-          <button onClick={() => navigate('/pokemon/create')} className="create-button">
+          {isAdmin && (
+            <button onClick={() => navigate('/pokemon/create')} className="create-button">
               Créer un Pokémon
-          </button>
+            </button>
+          )}
         </div>
       </div>
       <div className="pokemon-list">
@@ -104,24 +137,28 @@ const PokemonList = () => {
             </div>
             <div className="pokemon-stats">
               <div className="pokemon-stat">
-                <span>Attack:</span>
-                <span>{pokemon.base.Attack}</span>
-              </div>
-              <div className="pokemon-stat">
-                <span>Defense:</span>
-                <span>{pokemon.base.Defense}</span>
-              </div>
-              <div className="pokemon-stat">
-                <span>Special Attack:</span>
-                <span>{pokemon.base['Sp. Attack']}</span>
-              </div>
-              <div className="pokemon-stat">
-                <span>Special Defense:</span>
-                <span>{pokemon.base['Sp. Defense']}</span>
-              </div>
-              <div className="pokemon-stat">
                 <span>HP:</span>
-                <span>{pokemon.base.HP}</span>
+                <span>{pokemon.base.HP || 0}</span>
+              </div>
+              <div className="pokemon-stat">
+                <span>ATK:</span>
+                <span>{pokemon.base.Attack || 0}</span>
+              </div>
+              <div className="pokemon-stat">
+                <span>DEF:</span>
+                <span>{pokemon.base.Defense || 0}</span>
+              </div>
+              <div className="pokemon-stat">
+                <span>SP.ATK:</span>
+                <span>{pokemon.base['Sp. Attack'] || pokemon.base.SpecialAttack || 0}</span>
+              </div>
+              <div className="pokemon-stat">
+                <span>SP.DEF:</span>
+                <span>{pokemon.base['Sp. Defense'] || pokemon.base.SpecialDefense || 0}</span>
+              </div>
+              <div className="pokemon-stat">
+                <span>SPD:</span>
+                <span>{pokemon.base.Speed || 0}</span>
               </div>
             </div>
           </div>

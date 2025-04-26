@@ -14,60 +14,46 @@ const PokemonDetail = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Fonction séparée pour vérifier le statut admin
-  const checkAdminStatus = useCallback(async () => {
-    try {
-      if (!authService.isAuthenticated()) {
-        setIsAdmin(false);
-        return;
+  // Vérification des droits d'administration
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      try {
+        const serverAdminStatus = await authService.checkAdminStatus();
+        setIsAdmin(serverAdminStatus.isAdmin);
+      } catch (error) {
+        // Erreur silencieuse
       }
+    };
 
-      // Vérification avec le serveur directement, ignorer le cache local
-      const serverAdminStatus = await authService.checkAdminStatus();
-      console.log("PokemonDetail - Statut admin (serveur):", serverAdminStatus.isAdmin);
-      setIsAdmin(serverAdminStatus.isAdmin === true);
-    } catch (error) {
-      console.error("Erreur lors de la vérification du statut admin:", error);
-      setIsAdmin(false);
-    }
+    checkAdminStatus();
   }, []);
 
-  // Charger les données du Pokémon et vérifier le statut admin
+  // Récupération des données du Pokémon
   useEffect(() => {
-    // Vérifier le statut admin
-    checkAdminStatus();
-    
-    // Chargement des détails du pokémon
-    setIsLoading(true);
-    pokemonService.getOnePokemon(id)
-      .then(response => {
-        console.log('Received response:', response);
-        // Accéder au bon niveau de la structure
-        const pokemonData = response?.pokemon?.pokemon || response?.pokemon;
-        if (pokemonData) {
-          setPokemon(pokemonData);
-          console.log('Pokemon data set:', pokemonData);
-        } else {
-          setError('Pokemon non trouvé');
-        }
-      })
-      .catch(err => {
-        console.error('Error:', err);
-        setError('Erreur lors du chargement des détails du pokémon');
-      })
-      .finally(() => {
+    const fetchPokemonData = async () => {
+      try {
+        const response = await pokemonService.getOnePokemon(id);
+        
+        // Extraire les données du Pokémon de différents formats possibles de réponse
+        const data = response?.pokemon?.pokemon || response?.pokemon || response;
+        setPokemon(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setIsLoading(false);
-      });
-  }, [id, checkAdminStatus]);
-
-  // S'abonner aux changements de statut admin
-  useEffect(() => {
-    const handleAdminStatusChange = (newStatus) => {
-      console.log("PokemonDetail - Événement de changement de statut admin reçu:", newStatus);
-      setIsAdmin(newStatus);
+      }
     };
+
+    fetchPokemonData();
+  }, [id]);
+
+  useEffect(() => {
+    // S'abonner aux changements de statut admin
+    const unsubscribe = authService.subscribeToAdminChanges((newStatus) => {
+      setIsAdmin(newStatus);
+    });
     
-    const unsubscribe = authService.subscribeToAdminChanges(handleAdminStatusChange);
+    // Se désabonner lorsque le composant est démonté
     return () => unsubscribe();
   }, []);
 
@@ -75,18 +61,13 @@ const PokemonDetail = () => {
   const handleBack = () => navigate('/');
   
   const handleDelete = async () => {
-    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer ${pokemon.name.french} ?`)) {
-      return;
-    }
-    
-    try {
-      setIsDeleting(true);
-      await pokemonService.DeletePokemon(id);
-      navigate('/');
-    } catch (error) {
-      console.error('Error deleting pokemon:', error);
-      setError('Erreur lors de la suppression');
-      setIsDeleting(false);
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce pokémon ?')) {
+      try {
+        await pokemonService.DeletePokemon(id);
+        navigate('/');
+      } catch (error) {
+        setError('Erreur lors de la suppression');
+      }
     }
   };
 

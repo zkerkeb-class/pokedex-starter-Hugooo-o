@@ -144,7 +144,7 @@ const Navbar = () => {
         className={`navbar ${isVisible ? 'navbar-visible' : 'navbar-hidden'}`}
       >
         <div className="nav-brand">
-          {location.pathname !== '/login' && (
+          {location.pathname !== '/login' && location.pathname !== '/register' && (
             <>
               <Link to="/my-pokemons" className="nav-link">
                 Mes Pokémons
@@ -178,6 +178,10 @@ const Navbar = () => {
               {location.pathname === '/login' ? (
                 <Link to="/register" className="nav-link">
                   Inscription
+                </Link>
+              ) : location.pathname === '/register' ? (
+                <Link to="/login" className="nav-link">
+                  Connexion
                 </Link>
               ) : (
                 <>

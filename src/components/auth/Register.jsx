@@ -42,33 +42,39 @@ const Register = () => {
 
   return (
     <div className="auth-container">
-      <form onSubmit={handleSubmit} className="auth-form">
-        <h2>Inscription</h2>
-        {error && <div className="error-message">{error}</div>}
-        <div className="form-group">
-          <label htmlFor="username">Nom d'utilisateur</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={userData.username}
-            onChange={handleChange}
-            required
-          />
+      <div className="auth-card">
+        <div className="auth-logo">
+          <img src="/favicon.png" alt="Pokédex Logo" />
+          <h1>Pokédex</h1>
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Mot de passe</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={userData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">S'inscrire</button>
-      </form>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <h2>Inscription</h2>
+          {error && <div className="error-message">{error}</div>}
+          <div className="form-group">
+            <label htmlFor="username">Nom d'utilisateur</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={userData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Mot de passe</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit">S'inscrire</button>
+        </form>
+      </div>
     </div>
   );
 };

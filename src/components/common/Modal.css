@@ -45,10 +45,18 @@
   font-size: 1.5rem;
   cursor: pointer;
   color: #666;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .modal-close-button:hover {
   color: #c00;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .modal-content {

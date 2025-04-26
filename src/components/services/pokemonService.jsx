@@ -42,8 +42,21 @@ const pokemonService = {
 
   PostNewPokemon: async (pokemonData) => {
     try {
-      // Envoyez les données telles quelles à MongoDB
-      const response = await axios.post(`${API_URL}/pokemons`, pokemonData);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Vous devez être connecté en tant qu'administrateur pour créer un Pokémon");
+      }
+
+      // Envoyez les données avec le token d'authentification
+      const response = await axios.post(
+        `${API_URL}/pokemons`, 
+        pokemonData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       return response.data;
     } catch (error) {
       console.error('Error creating pokemon:', error);
@@ -53,6 +66,11 @@ const pokemonService = {
 
   UpdatePokemon: async (id, pokemonData) => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Vous devez être connecté en tant qu'administrateur pour modifier un Pokémon");
+      }
+
       // Préparation des données pour MongoDB
       const dataToSend = {
         ...pokemonData,
@@ -60,7 +78,15 @@ const pokemonService = {
         _id: undefined
       };
       
-      const response = await axios.put(`${API_URL}/pokemons/${id}`, dataToSend);
+      const response = await axios.put(
+        `${API_URL}/pokemons/${id}`, 
+        dataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       console.log('MongoDB response:', response.data);
       
       // Exactement la même transformation que getOnePokemon
@@ -81,7 +107,19 @@ const pokemonService = {
 
   DeletePokemon: async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/pokemons/${id}`);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("Vous devez être connecté en tant qu'administrateur pour supprimer un Pokémon");
+      }
+
+      const response = await axios.delete(
+        `${API_URL}/pokemons/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       return response.data;
     } catch (error) {
       console.error('Error deleting pokemon:', error);

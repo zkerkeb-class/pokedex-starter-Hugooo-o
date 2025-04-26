@@ -27,24 +27,26 @@ const PokemonEdit = () => {
         console.log('Pokemon Data:', pokemonData);
         
         if (pokemonData) {
-          // Assurez-vous que les données sont formatées correctement
+          // S'assurer que les données sont formatées correctement
+          // Normaliser les noms de propriétés pour la cohérence d'affichage
           const formattedPokemon = {
             ...pokemonData,
             name: pokemonData.name || { french: '' },
-            base: pokemonData.base || {
-              HP: 0,
-              Attack: 0,
-              Defense: 0,
-              'Sp. Attack': 0,
-              'Sp. Defense': 0
+            base: {
+              HP: pokemonData.base?.HP || 0,
+              Attack: pokemonData.base?.Attack || 0,
+              Defense: pokemonData.base?.Defense || 0,
+              // Conversion des noms de propriétés pour l'affichage
+              'Sp. Attack': pokemonData.base?.SpecialAttack || pokemonData.base?.['Sp. Attack'] || 0,
+              'Sp. Defense': pokemonData.base?.SpecialDefense || pokemonData.base?.['Sp. Defense'] || 0,
+              Speed: pokemonData.base?.Speed || 0
             },
             type: Array.isArray(pokemonData.type) ? pokemonData.type : []
           };
           
-          console.log('Formatted Pokemon:', formattedPokemon);
+          console.log('Formatted Pokemon with normalized base stats:', formattedPokemon);
           setPokemon(formattedPokemon);
           setSelectedTypes(formattedPokemon.type);
-          console.log('Selected Types:', formattedPokemon.type);
         } else {
           setError('Format de données invalide');
         }
@@ -77,13 +79,26 @@ const PokemonEdit = () => {
     if (!isValid) return;
 
     try {
+      // Convertir les noms de propriétés pour la cohérence avec le modèle backend
       const updatedPokemon = {
         ...pokemon,
-        type: selectedTypes
+        type: selectedTypes,
+        base: {
+          HP: pokemon.base.HP || 0,
+          Attack: pokemon.base.Attack || 0,
+          Defense: pokemon.base.Defense || 0,
+          // Conversion des noms de propriétés pour la base de données
+          SpecialAttack: pokemon.base['Sp. Attack'] || 0,
+          SpecialDefense: pokemon.base['Sp. Defense'] || 0,
+          Speed: pokemon.base.Speed || 0
+        }
       };
+      
+      console.log('Sending updated pokemon with corrected field names:', updatedPokemon);
       await pokemonService.UpdatePokemon(id, updatedPokemon);
       navigate(`/pokemon/${id}`);
     } catch (err) {
+      console.error('Error updating pokemon:', err);
       setError('Erreur lors de la mise à jour');
     }
   };
@@ -170,10 +185,10 @@ const PokemonEdit = () => {
                   type="number"
                   id="HP"
                   name="HP"
-                  value={pokemon.base && pokemon.base.HP !== undefined ? pokemon.base.HP : 0}
+                  value={pokemon.base?.HP || 0}
                   onChange={handleStatsChange}
                   min="0"
-                  max="1000"
+                  max="255"
                 />
               </div>
               <div className="stat-input">
@@ -185,7 +200,7 @@ const PokemonEdit = () => {
                   value={pokemon.base?.Attack || 0}
                   onChange={handleStatsChange}
                   min="0"
-                  max="1000"
+                  max="255"
                 />
               </div>
               <div className="stat-input">
@@ -197,7 +212,7 @@ const PokemonEdit = () => {
                   value={pokemon.base?.Defense || 0}
                   onChange={handleStatsChange}
                   min="0"
-                  max="1000"
+                  max="255"
                 />
               </div>
               <div className="stat-input">
@@ -209,7 +224,7 @@ const PokemonEdit = () => {
                   value={pokemon.base?.['Sp. Attack'] || 0}
                   onChange={handleStatsChange}
                   min="0"
-                  max="1000"
+                  max="255"
                 />
               </div>
               <div className="stat-input">
@@ -221,7 +236,19 @@ const PokemonEdit = () => {
                   value={pokemon.base?.['Sp. Defense'] || 0}
                   onChange={handleStatsChange}
                   min="0"
-                  max="1000"
+                  max="255"
+                />
+              </div>
+              <div className="stat-input">
+                <label htmlFor="Speed">Vitesse</label>
+                <input
+                  type="number"
+                  id="Speed"
+                  name="Speed"
+                  value={pokemon.base?.Speed || 0}
+                  onChange={handleStatsChange}
+                  min="0"
+                  max="255"
                 />
               </div>
             </div>

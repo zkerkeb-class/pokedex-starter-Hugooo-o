@@ -1,0 +1,48 @@
+.type-filter-container {
+    position: relative;
+    width: 200px;
+    margin-left: auto; /* Force le positionnement à droite */
+  }
+  
+.type-filter-container {
+    position: relative;
+    width: 200px;
+  }
+  
+  .type-select {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 3px solid #2a75bb;
+    border-radius: 25px;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232a75bb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+  }
+  
+  .type-select:focus {
+    outline: none;
+    border-color: #FFCB05;
+    box-shadow: 0 4px 8px rgba(42, 117, 187, 0.2);
+    transform: scale(1.02);
+  }
+  
+  .type-select:hover {
+    border-color: #3d8bd4;
+    transform: translateY(-1px);
+  }
+  
+  .type-select option {
+    padding: 10px;
+    font-size: 16px;
+    background-color: white;
+    color: #333;
+  }

@@ -1,0 +1,197 @@
+/* Suppression des styles globaux qui peuvent causer des conflits */
+.pokemon-container {
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.pokemon-container .pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 350px);
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.pokemon-container .filters {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+
+.pokemon-container .search-container {
+  flex: 0 1 300px;
+}
+
+/* Ajustement de la taille des cartes */
+.pokemon-container .pokemon-card {
+  width: 350px;
+  min-height: 450px; /* Ajusté pour plus d'espace pour les statistiques */
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  border: 8px solid #FFCB05;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+  
+.pokemon-container .pokemon-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border: 8px solid #bbb12a;
+}
+
+.pokemon-container .pokemon-card h1 {
+  color: #2a75bb;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
+
+.pokemon-container .pokemon-card img {
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+/* Styles des types */
+.pokemon-container .pokemon-types {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  flex-wrap: nowrap; /* S'assurer que les types restent sur une seule ligne */
+  justify-content: center;
+}
+
+.pokemon-container .pokemon-type {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.pokemon-container .pokemon-type:has(img) {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.pokemon-container .pokemon-type:not(:has(img)) {
+  padding: 0.25rem 0.5rem;
+  background-color: #ffcb05;
+  color: #2a75bb;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.pokemon-container .type-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* Stats du Pokémon (copié et adapté de MyPokemons) */
+.pokemon-container .pokemon-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  width: 100%;
+  background-color: #f8f8f8;
+  padding: 0.75rem;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+}
+
+.pokemon-container .pokemon-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.pokemon-container .pokemon-stat span:first-child {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.pokemon-container .pokemon-stat span:last-child {
+  font-weight: bold;
+  color: #2a75bb;
+  font-size: 1.1rem;
+}
+
+/* État de chargement et erreur */
+.pokemon-container .loading, 
+.pokemon-container .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.pokemon-container .error {
+  color: #dc3545;
+}
+
+.pokemon-container .right-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pokemon-container .create-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 25px;
+  background-color: #2a75bb;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pokemon-container .create-button:hover {
+  background-color: #FFCB05;
+  color: #2a75bb;
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pokemon-container .pokemon-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  
+  .pokemon-container .pokemon-card {
+    width: 100%;
+  }
+}
